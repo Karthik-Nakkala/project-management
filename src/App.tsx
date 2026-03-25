@@ -1,13 +1,14 @@
 import { Provider, useSelector, useDispatch } from 'react-redux'
 import { store, setView } from './store/store'
-import type { RootState, AppDispatch } from './store/store'
+import type { AppDispatch } from './store/store'
 import KanbanBoard from './components/kanban/KanbanBoard'
 import ListView from './components/list/ListView'
 import FilterBar from './components/filters/FilterBar'
+import TimelineView from './components/timeline/TimelineView'
 
 const AppContent = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const currentView = useSelector((state: RootState) => state.app.currentView);
+  const currentView = useSelector((state: any) => state.app.currentView);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -15,19 +16,19 @@ const AppContent = () => {
         <h1 className="text-xl font-bold text-gray-800">Velozity Project Management</h1>
         <div className="flex bg-gray-100 p-1 rounded-md">
           <button 
-            className={`px-4 py-1.5 rounded text-sm font-medium transition-colors ${currentView === 'kanban' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
+            className={`px-4 py-1.5 rounded text-sm font-medium transition-colors cursor-pointer ${currentView === 'kanban' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
             onClick={() => dispatch(setView('kanban'))}
           >
             Kanban
           </button>
           <button 
-            className={`px-4 py-1.5 rounded text-sm font-medium transition-colors ${currentView === 'list' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
+            className={`px-4 py-1.5 rounded text-sm font-medium transition-colors cursor-pointer ${currentView === 'list' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
             onClick={() => dispatch(setView('list'))}
           >
             List
           </button>
           <button 
-            className={`px-4 py-1.5 rounded text-sm font-medium transition-colors ${currentView === 'timeline' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
+            className={`px-4 py-1.5 rounded text-sm font-medium transition-colors cursor-pointer ${currentView === 'timeline' ? 'bg-white shadow-sm text-blue-600' : 'text-gray-500 hover:text-gray-800'}`}
             onClick={() => dispatch(setView('timeline'))}
           >
             Timeline
@@ -40,7 +41,7 @@ const AppContent = () => {
       <main className="flex-1 overflow-hidden relative">
         {currentView === 'kanban' && <KanbanBoard />}
         {currentView === 'list' && <ListView />}
-        {currentView === 'timeline' && <div className="flex items-center justify-center p-8 h-full text-gray-500 font-medium">Timeline View Setup Pending</div>}
+        {currentView === 'timeline' && <TimelineView />}
       </main>
     </div>
   )
