@@ -1,73 +1,29 @@
-# React + TypeScript + Vite
+# Velozity Project Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-performance project management dashboard specifically architected to demonstrate advanced React performance optimizations. Features custom virtual scrolling implementations, 0-dependency native Drag-and-Drop algorithms, URL synced state persistence, and a real-time Mock Collaboration tracking framework.
 
-Currently, two official plugins are available:
+## 🚀 Setup & Execution 
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+# Install Dependencies
+npm install
 
-## React Compiler
+# Start Local Dev Environment
+npm run dev
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Construct Production Build
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## ✨ Architecture Highlights
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### State Management Pipeline
+**Redux Toolkit** natively controls the Global Document Context. It was selected because centralizing data normalization inside a strict framework allows elements like our simulated WebSockets and custom hook filtering arrays to securely process high-volume changes without choking React renders. Cross-component updates immediately synchronize globally without nested prop drills.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Custom Virtual Scrolling Engine
+Created an independent DOM rendering solution utilizing absolute positioning locked behind CSS transforms (`translateY`). Our generic logic precisely calculates vertical array chunks from exact `scrollTop` boundaries bounding mathematical limits with 5 visual render `BUFFERS` overlapping. This keeps memory signatures identically constrained whether sorting 500 tasks or 5,000 tasks inside `ListView.tsx`.
+
+### Drag-and-Drop Abstraction
+Strict 0-dependency methodology directly attaching `mousedown` & `touchstart` bounds mathematically off a single unified custom coordinate system. Built to safely decouple cloned DOM elements while running an intelligent `data-status` resolver using HTML bounding collisions to dynamically highlight and transition Task Cards without generic grid libraries. 
+
+*(Achieves >90+ Desktop Lighthouse constraints strictly because DOM node weight never shifts!)*

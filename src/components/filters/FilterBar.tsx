@@ -44,7 +44,7 @@ const FilterBar = () => {
   };
 
   return (
-    <div className="p-4 border-b border-gray-200 bg-white relative z-20">
+    <div className="p-4 border-b border-gray-200 bg-white relative z-50">
       <div className="flex flex-wrap gap-4 items-center">
         {/* Status dropdown */}
         <div className="relative">

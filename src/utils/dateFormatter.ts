@@ -1,19 +1,32 @@
-export const formatDueDate = (dueDate: string): { formatted: string; isOverdue: boolean } => {
-  const dateObj = new Date(dueDate);
+export const formatDueDate = (dateStr: string) => {
+  const due = new Date(dateStr);
   const now = new Date();
   
-  // Format string like 'Jan 12, 2024'
-  const formatted = dateObj.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
+  // Normalize to midnight for accurate day difference tracking bounds
+  const dueDay = new Date(due.getFullYear(), due.getMonth(), due.getDate());
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  // Calculate if overdue (ignoring time)
-  // Set time components to 0 for a pure date comparison
-  dateObj.setHours(0, 0, 0, 0);
-  now.setHours(0, 0, 0, 0);
-  const isOverdue = dateObj.getTime() < now.getTime();
+  const diffTime = dueDay.getTime() - today.getTime();
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+  let formatted = '';
+  let isOverdue = false;
+
+  if (diffDays === 0) {
+    formatted = 'Due Today';
+    isOverdue = true; 
+  } else if (diffDays < 0) {
+    isOverdue = true;
+    const daysOverdue = Math.abs(diffDays);
+    if (daysOverdue > 7) {
+      formatted = `${daysOverdue} days overdue`;
+    } else {
+      formatted = due.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+  } else {
+    // Future date
+    formatted = due.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
 
   return { formatted, isOverdue };
 };
