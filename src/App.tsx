@@ -1,9 +1,9 @@
-import React from 'react'
 import { Provider, useSelector, useDispatch } from 'react-redux'
 import { store, setView } from './store/store'
 import type { RootState, AppDispatch } from './store/store'
 import KanbanBoard from './components/kanban/KanbanBoard'
 import ListView from './components/list/ListView'
+import FilterBar from './components/filters/FilterBar'
 
 const AppContent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,7 +35,9 @@ const AppContent = () => {
         </div>
       </header>
       
-      <main className="flex-1 overflow-hidden">
+      <FilterBar />
+
+      <main className="flex-1 overflow-hidden relative">
         {currentView === 'kanban' && <KanbanBoard />}
         {currentView === 'list' && <ListView />}
         {currentView === 'timeline' && <div className="flex items-center justify-center p-8 h-full text-gray-500 font-medium">Timeline View Setup Pending</div>}

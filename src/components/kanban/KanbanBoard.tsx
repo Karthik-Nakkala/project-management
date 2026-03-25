@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react"
-import { useSelector, useDispatch } from "react-redux"
-import type { RootState, AppDispatch } from "../../store/store"
+import { useDispatch } from "react-redux"
+import type { AppDispatch } from "../../store/store"
 import { moveTask } from "../../store/store"
 import type { Task, Status } from "../../types"
+import { useFilteredTasks } from '../../hooks/useFilteredTasks'
+import { useFilters } from '../../hooks/useFilters'
 import ToDoTask from "./ToDoTask"
 import InProgressTask from "./InProgressTask"
 import InReviewTask from "./InReviewTask"
@@ -10,7 +12,8 @@ import DoneTask from "./DoneTask"
 
 const KanbanBoard = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const tasks: Task[] = useSelector((state: RootState) => state.app.tasks)
+  const tasks = useFilteredTasks()
+  const { hasActiveFilters, clearFilters } = useFilters()
 
   const tasksByStatus = tasks.reduce((acc, task) => {
     if (!acc[task.status]) {
@@ -158,8 +161,24 @@ const KanbanBoard = () => {
     };
   }, []);
 
+  if (tasks.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 h-full space-y-4 bg-slate-50 min-h-screen">
+        <p className="text-gray-500 font-medium text-lg">No tasks match the current filters.</p>
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-blue-600 hover:text-blue-800 underline font-medium cursor-pointer transition"
+          >
+            Clear all filters
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <div className="flex overflow-x-auto p-4 gap-4 h-full bg-slate-50 min-h-screen">
+    <div className="flex overflow-x-auto p-4 gap-4 h-full bg-slate-50 min-h-screen pt-6">
       <ToDoTask onStartDrag={startDrag} toDoTasks={tasksByStatus['To Do'] ?? []}/>
       <InProgressTask onStartDrag={startDrag} inProgressTasks={tasksByStatus['In Progress'] ?? []}/>
       <InReviewTask onStartDrag={startDrag} inReviewTasks={tasksByStatus['In Review'] ?? []}/>

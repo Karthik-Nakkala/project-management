@@ -1,15 +1,18 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { moveTask } from '../../store/store';
-import type { RootState, AppDispatch } from '../../store/store';
+import type { AppDispatch } from '../../store/store';
 import type { Priority, Status } from '../../types';
 import { formatDueDate } from '../../utils/dateFormatter';
+import { useFilteredTasks } from '../../hooks/useFilteredTasks';
+import { useFilters } from '../../hooks/useFilters';
 
 const ROW_HEIGHT = 60;
 const BUFFER = 5;
 
 const ListView = () => {
-  const tasks = useSelector((state: RootState) => state.app.tasks);
+  const tasks = useFilteredTasks();
+  const { hasActiveFilters, clearFilters } = useFilters();
   const dispatch = useDispatch<AppDispatch>();
 
   const [sortField, setSortField] = useState<'title' | 'priority' | 'dueDate'>('title');
@@ -79,6 +82,22 @@ const ListView = () => {
       setSortOrder('asc');
     }
   };
+
+  if (tasks.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 h-full space-y-4 bg-slate-50">
+        <p className="text-gray-500 font-medium text-lg">No tasks match the current filters.</p>
+        {hasActiveFilters && (
+          <button
+            onClick={clearFilters}
+            className="text-blue-600 hover:text-blue-800 underline font-medium cursor-pointer transition"
+          >
+            Clear all filters
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 h-full flex flex-col bg-slate-50 w-full overflow-hidden">
