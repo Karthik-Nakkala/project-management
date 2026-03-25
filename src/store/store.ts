@@ -41,9 +41,12 @@ const appSlice = createSlice({
 
 export const { setView, updateTask, moveTask } = appSlice.actions;
 
+import collaborationReducer from './collaborationSlice';
+
 export const store = configureStore({
   reducer: {
     app: appSlice.reducer,
+    collaboration: collaborationReducer,
   },
 });
 

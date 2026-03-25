@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { moveTask } from '../../store/store';
-import type { AppDispatch } from '../../store/store';
+import type { RootState, AppDispatch } from '../../store/store';
 import type { Priority, Status } from '../../types';
 import { formatDueDate } from '../../utils/dateFormatter';
 import { useFilteredTasks } from '../../hooks/useFilteredTasks';
@@ -14,6 +14,9 @@ const ListView = () => {
   const tasks = useFilteredTasks();
   const { hasActiveFilters, clearFilters } = useFilters();
   const dispatch = useDispatch<AppDispatch>();
+  
+  const activeUsers = useSelector((state: RootState) => state.collaboration.activeUsers);
+  const userTaskMap = useSelector((state: RootState) => state.collaboration.userTaskMap);
 
   const [sortField, setSortField] = useState<'title' | 'priority' | 'dueDate'>('title');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -134,6 +137,11 @@ const ListView = () => {
           {visibleRows.map((task, idx) => {
             const actualIndex = startIndex + idx;
             const { formatted, isOverdue } = formatDueDate(task.dueDate);
+            
+            const collaborators = Object.entries(userTaskMap)
+              .filter(([_, taskId]) => taskId === task.id)
+              .map(([userId]) => activeUsers.find(u => u.id === userId))
+              .filter(Boolean) as typeof activeUsers;
 
             const priorityColor = 
               task.priority === 'Critical' ? 'bg-red-500 text-white' :
@@ -176,10 +184,30 @@ const ListView = () => {
                     <option value="Done">Done</option>
                   </select>
                 </div>
-                <div className="w-1/6 flex justify-start pl-4">
+                <div className="w-1/6 flex justify-start items-center pl-4 gap-2">
                   <div className="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold shadow-sm" title={task.assignee.name}>
                     {task.assignee.initials}
                   </div>
+                  
+                  {collaborators.length > 0 && (
+                    <div className="flex -space-x-1.5 border-l pl-2 border-gray-200 transition-all duration-300">
+                      {collaborators.slice(0, 3).map((user) => (
+                        <div
+                          key={user.id}
+                          className="w-6 h-6 rounded-full border border-white flex items-center justify-center text-[9px] font-bold text-white z-10 shadow-sm"
+                          style={{ backgroundColor: user.color }}
+                          title={`${user.name} is viewing this`}
+                        >
+                          {user.initials}
+                        </div>
+                      ))}
+                      {collaborators.length > 3 && (
+                        <div className="w-6 h-6 rounded-full bg-gray-400 border border-white text-white flex items-center justify-center text-[9px] font-bold z-10 shadow-sm">
+                          +{collaborators.length - 3}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             );

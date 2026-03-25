@@ -5,10 +5,14 @@ import KanbanBoard from './components/kanban/KanbanBoard'
 import ListView from './components/list/ListView'
 import FilterBar from './components/filters/FilterBar'
 import TimelineView from './components/timeline/TimelineView'
+import CollaborationBar from './components/collaboration/CollaborationBar'
+import { useCollaborationSimulator } from './hooks/useCollaborationSimulator'
 
 const AppContent = () => {
   const dispatch = useDispatch<AppDispatch>();
   const currentView = useSelector((state: any) => state.app.currentView);
+  
+  useCollaborationSimulator();
 
   return (
     <div className="h-screen flex flex-col bg-gray-50">
@@ -36,6 +40,7 @@ const AppContent = () => {
         </div>
       </header>
       
+      <CollaborationBar />
       <FilterBar />
 
       <main className="flex-1 overflow-hidden relative">
