@@ -28,7 +28,7 @@ const KanbanBoard = () => {
 
 
   return (
-    <div>
+    <div className="flex overflow-x-auto p-4 gap-4 h-full bg-slate-50 min-h-screen">
       <ToDoTask toDoTasks={tasksByStatus['To Do'] ?? []}/>
       <InProgressTask inProgressTasks={tasksByStatus['In Progress'] ?? []}/>
       <InReviewTask inReviewTasks={tasksByStatus['In Review'] ?? []}/>

@@ -1,12 +1,18 @@
-import React from 'react'
 import type { Task } from '../../types'
+import TaskCard from './TaskCard'
 
 const DoneTask = ({ doneTasks }: { doneTasks: Task[] }) => {
   return (
-    <div>
-      {
-        doneTasks.map(task=>(<div key={task.id}>{task.title}</div>))
-      }
+    <div className="w-80 flex-shrink-0 bg-gray-100 rounded-lg p-3 flex flex-col max-h-[80vh]">
+      <div className="font-bold mb-3 pb-2 border-b border-gray-300 flex justify-between items-center text-gray-700">
+        <span>Done</span>
+        <span className="bg-gray-200 text-gray-600 rounded-full px-2 py-0.5 text-xs">{doneTasks.length}</span>
+      </div>
+      <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+        {doneTasks.map(task => (
+          <TaskCard key={task.id} task={task} />
+        ))}
+      </div>
     </div>
   )
 }
