@@ -3,6 +3,7 @@ import { Provider, useSelector, useDispatch } from 'react-redux'
 import { store, setView } from './store/store'
 import type { RootState, AppDispatch } from './store/store'
 import KanbanBoard from './components/kanban/KanbanBoard'
+import ListView from './components/list/ListView'
 
 const AppContent = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -36,7 +37,7 @@ const AppContent = () => {
       
       <main className="flex-1 overflow-hidden">
         {currentView === 'kanban' && <KanbanBoard />}
-        {currentView === 'list' && <div className="flex items-center justify-center p-8 h-full text-gray-500 font-medium">List View Setup Pending</div>}
+        {currentView === 'list' && <ListView />}
         {currentView === 'timeline' && <div className="flex items-center justify-center p-8 h-full text-gray-500 font-medium">Timeline View Setup Pending</div>}
       </main>
     </div>
